@@ -13,14 +13,14 @@ public class GameManager : Singleton<GameManager>
     public float Time { get { return _time; } }
     public float TimerPercentage => Time / LOOP_TIME;
     public static bool TimerEnabled = false;
-    public UnityEvent TimerComplete;
 
     public int SoulCount = 0;
     public int SoulGoal = 1;
     public float SoulsPercentage => Mathf.Clamp01(SoulCount / SoulGoal);
 
     public int Coins = 0;
-
+    public int LoopCount = 0;
+    public int FailCount = 0;
     public bool ShowStartDayButton = false;
 
     // Start is called before the first frame update
@@ -38,15 +38,24 @@ public class GameManager : Singleton<GameManager>
             if (_time <= 0)
             {
                 _time = LOOP_TIME;
-                TimerComplete.Invoke(); //TODO remove?
+                LoopCount++;
 
                 if (SoulCount < SoulGoal)
                 {
-                    Debug.Log("fail!");
-                    //TODO strikes or fail harder
+                    FailCount++;
+                    if (FailCount >= 3)
+                    {
+                        TimerEnabled = false;
+                        //here be the true fail state
+                    }
                 }
                 SoulCount = 0;
-                //TODO increase soulgoal
+                if (LoopCount > 10)
+                    SoulGoal++;
+                if (LoopCount > 50)
+                    SoulGoal++;
+                if (LoopCount > 100)
+                    SoulGoal++;
             }
         }
     }
