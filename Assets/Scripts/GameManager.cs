@@ -16,7 +16,7 @@ public class GameManager : Singleton<GameManager>
 
     public int SoulCount = 0;
     public int SoulGoal = 1;
-    public float SoulsPercentage => Mathf.Clamp01(SoulCount / SoulGoal);
+    public float SoulsPercentage => Mathf.Clamp01((float)SoulCount / SoulGoal);
 
     public int Coins = 0;
     public int LoopCount = 0;
@@ -49,12 +49,8 @@ public class GameManager : Singleton<GameManager>
                         //here be the true fail state
                     }
                 }
-                SoulCount = 0;
-                if (LoopCount > 10)
-                    SoulGoal++;
-                if (LoopCount > 50)
-                    SoulGoal++;
-                if (LoopCount > 100)
+                SoulCount = Mathf.Max(SoulCount-SoulGoal, 0);
+                if (LoopCount % 10 == 0)
                     SoulGoal++;
             }
         }
